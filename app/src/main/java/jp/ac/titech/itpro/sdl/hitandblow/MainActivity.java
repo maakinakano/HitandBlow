@@ -60,15 +60,40 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < NUM_KEYS.length; i++)
             numKeys[i] = (Button) findViewById(NUM_KEYS[i]);
         ctrlButton = (Button) findViewById(R.id.control_button);
-
         status = new ArrayList<>();
+        rnd = new Random();
+
+        if(savedInstanceState != null) {
+            messageView.setText(savedInstanceState.getString("MainActivity.messageView.text"));
+            status = savedInstanceState.getStringArrayList("MainActivity.status");
+            ntrial = savedInstanceState.getInt("MainActivity.ntrial");
+            problem = savedInstanceState.getIntArray("MainActivity.problem");
+            pos = savedInstanceState.getInt("MainActivity.pos");
+            guess = savedInstanceState.getIntArray("MainActivity.guess");
+            for(int i=0; i<pos; i++)
+                guessDigits[i].setText(getString(R.string.guess_digit, guess[i]));
+            game_started = savedInstanceState.getBoolean("MainActivity.game_started");
+            ctrlButton.setText(savedInstanceState.getString("MainActivity.ctrlButton.text"));
+        } else {
+            problem = new int[N];
+            guess = new int[N];
+            initGame();
+        }
         statusAdapter = new ArrayAdapter<>(this, R.layout.status_item, status);
         statusView.setAdapter(statusAdapter);
+    }
 
-        rnd = new Random();
-        problem = new int[N];
-        guess = new int[N];
-        initGame();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("MainActivity.messageView.text", messageView.getText().toString());
+        outState.putStringArrayList("MainActivity.status", status);
+        outState.putInt("MainActivity.ntrial", ntrial);
+        outState.putIntArray("MainActivity.problem", problem);
+        outState.putInt("MainActivity.pos", pos);
+        outState.putIntArray("MainActivity.guess", guess);
+        outState.putBoolean("MainActivity.game_started", game_started);
+        outState.putString("MainActivity.ctrlButton.text", ctrlButton.getText().toString());
     }
 
     public void onClickNumKey(View v) {
@@ -151,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGame() {
+        Log.d(TAG, "here!!!!!!!!!!!!!!!!!!!!!!!!!!");
         newProblem();
         clearGuess();
         statusAdapter.clear();
