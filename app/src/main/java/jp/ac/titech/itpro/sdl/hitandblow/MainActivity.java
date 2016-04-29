@@ -176,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startGame() {
-        Log.d(TAG, "here!!!!!!!!!!!!!!!!!!!!!!!!!!");
         newProblem();
         clearGuess();
         statusAdapter.clear();
